@@ -1,4 +1,4 @@
-/*
+/*l
 Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleServer.cpp
 Ported to Arduino ESP32 by Evandro Copercini
 */
@@ -6,9 +6,15 @@ Ported to Arduino ESP32 by Evandro Copercini
 #include "BLEDevice.h"
 #include "BLEUtils.h"
 #include "BLEServer.h"
+#include "BLE2902.h"
+
+
+
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
+
+bool deviceConnected = false;
 
 #define SCALE_SERVICE_UUID					"4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define SCALE_VALUE1_CHARACTERISTIC_UUID	"beb5483e-36e1-4688-b7f5-ea07361b26a8"
@@ -19,63 +25,120 @@ Ported to Arduino ESP32 by Evandro Copercini
 #define	CONFIG_MEASURESCALE2_CHARACTERISTIC_UUID	"2cce3d28-208b-11e8-b467-0ed5f89f718b"
 #define	CONFIG_MEASURESCALE3_CHARACTERISTIC_UUID	"3625ec68-208b-11e8-b467-0ed5f89f718b"
 
+BLECharacteristic *scaleValue1Characteristic;
+BLECharacteristic *scaleValue2Characteristic;
+BLECharacteristic *scaleValue3Characteristic;
+
+BLECharacteristic *configMeasureScale1Characteristic;
+BLECharacteristic *configMeasureScale2Characteristic;
+BLECharacteristic *configMeasureScale3Characteristic;
+
+class MyServerCallbacks : public BLEServerCallbacks {
+	void onConnect(BLEServer* pServer) {
+		deviceConnected = true;
+		Serial.println("Device connected.");
+	};
+
+	void onDisconnect(BLEServer* pServer) {
+		deviceConnected = false;
+		Serial.println("Device disconnected.");
+	};
+};
+
+int count = 0;
+
+void setIntToCharacteristic(BLECharacteristic* charact, int value) {
+	char txstr[8];
+	itoa(value, txstr, 10);
+	charact->setValue(txstr);
+}
+
+
+
 void setup() {
 	Serial.begin(115200);
 	Serial.println("Starting BLE work!");
 	//Create a server
 	BLEDevice::init("CG Scale");
 	BLEServer *pServer = BLEDevice::createServer();
+	pServer->setCallbacks(new MyServerCallbacks());
 
 	//Create Service for CG Measuring
 	BLEService *scaleService = pServer->createService(SCALE_SERVICE_UUID);
 	//Define characteristics for measuring Service
 
-	BLECharacteristic *scaleValue1Characteristic = scaleService->createCharacteristic(
+	scaleValue1Characteristic = scaleService->createCharacteristic(
 		SCALE_VALUE1_CHARACTERISTIC_UUID,
-		BLECharacteristic::PROPERTY_READ //|
-		//BLECharacteristic::PROPERTY_WRITE
+		BLECharacteristic::PROPERTY_READ |
+		BLECharacteristic::PROPERTY_NOTIFY
 	);
-	BLECharacteristic *scaleValue2Characteristic = scaleService->createCharacteristic(
+	scaleValue2Characteristic = scaleService->createCharacteristic(
 		SCALE_VALUE2_CHARACTERISTIC_UUID,
-		BLECharacteristic::PROPERTY_READ //|
-		//BLECharacteristic::PROPERTY_WRITE
+		BLECharacteristic::PROPERTY_READ |
+		BLECharacteristic::PROPERTY_NOTIFY
 	);
-	BLECharacteristic *scaleValue3Characteristic = scaleService->createCharacteristic(
+	scaleValue3Characteristic = scaleService->createCharacteristic(
 		SCALE_VALUE3_CHARACTERISTIC_UUID,
-		BLECharacteristic::PROPERTY_READ //|
-		//BLECharacteristic::PROPERTY_WRITE
+		BLECharacteristic::PROPERTY_READ |
+		BLECharacteristic::PROPERTY_NOTIFY
 	);
+
+	scaleValue1Characteristic->addDescriptor(new BLE2902());
+	scaleValue2Characteristic->addDescriptor(new BLE2902());
+	scaleValue3Characteristic->addDescriptor(new BLE2902());
 
 	//Create Service for CG Configuration
 
 	BLEService *configService = pServer->createService(CONFIG_SERVICE_UUID);
 
 	//Define Characteristics for Config Service
-	BLECharacteristic *configMeasureScale1Characteristic = configService->createCharacteristic(
+	configMeasureScale1Characteristic = configService->createCharacteristic(
 		CONFIG_MEASURESCALE1_CHARACTERISTIC_UUID,
 		BLECharacteristic::PROPERTY_READ |
 		BLECharacteristic::PROPERTY_WRITE
 	);
-	BLECharacteristic *configMeasureScale2Characteristic = configService->createCharacteristic(
+	configMeasureScale2Characteristic = configService->createCharacteristic(
 		CONFIG_MEASURESCALE2_CHARACTERISTIC_UUID,
 		BLECharacteristic::PROPERTY_READ |
 		BLECharacteristic::PROPERTY_WRITE
 	);
-	BLECharacteristic *configMeasureScale3Characteristic = configService->createCharacteristic(
+	configMeasureScale3Characteristic = configService->createCharacteristic(
 		CONFIG_MEASURESCALE3_CHARACTERISTIC_UUID,
 		BLECharacteristic::PROPERTY_READ |
 		BLECharacteristic::PROPERTY_WRITE
 	);
 
+	
+
 	scaleValue1Characteristic->setValue("1200.01");
+
+	//Start Services
 	scaleService->start();
 	configService->start();
+	
 	BLEAdvertising *pAdvertising = pServer->getAdvertising();
 	pAdvertising->start();
-	Serial.println("Characteristic defined! Now you can read it in your phone!");
+	Serial.println("Waiting a client connection to notify...");
+	
 }
 
 void loop() {
-	// put your main code here, to run repeatedly:
-	delay(2000);
+	if (deviceConnected)
+	{
+		setIntToCharacteristic(scaleValue1Characteristic, 1201);
+		scaleValue1Characteristic->notify(); 
+		setIntToCharacteristic(scaleValue2Characteristic, 1202);
+		scaleValue2Characteristic->notify();
+		setIntToCharacteristic(scaleValue3Characteristic, 1203);
+		scaleValue3Characteristic->notify();
+		
+		
+		
+		delay(500);
+	}
+	
+	else
+	{
+
+	}
 }
