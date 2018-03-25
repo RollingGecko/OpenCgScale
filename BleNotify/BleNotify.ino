@@ -26,7 +26,7 @@ every couple of seconds.
 #include <BLE2902.h>
 #include <stdlib.h>
 
-//BLECharacteristic *pCharacteristic;
+BLECharacteristic *pCharacteristic;
 bool deviceConnected = false;
 uint8_t value = 0;
 
@@ -44,28 +44,35 @@ class MyServerCallbacks : public BLEServerCallbacks {
 
 	void onDisconnect(BLEServer* pServer) {
 		deviceConnected = false;
-	}
+	 
 };
 
 
-class IntCharacteristic : public BLECharacteristic {
-	IntCharacteristic(const char* myuuid, uint32_t properties = 0) : BLECharacteristic(myuuid,properties) {
-		setIntValue(0);
-	}
-	void setIntValue(int temp) {
-		char strValue[8];
-		itoa(temp, strValue, 10);
-		setValue(strValue);
-	}
-	int getIntValue() {
-		std::string value = getValue();
-		char charValue[6];
-		strcpy(charValue, value.c_str());
-		return atoi(charValue);
-	}
-};
+void setIntToCharacteristic(BLECharacteristic* charact, int value) {
+	char txstr[8];
+	itoa(value, txstr, 10);
+	charact->setValue(txstr);
+}
 
-IntCharacteristic *pCharacteristic;
+
+//class IntCharacteristic : public BLECharacteristic {
+//	IntCharacteristic(const char* myuuid, uint32_t properties = 0) : BLECharacteristic(myuuid,properties) {
+//		setIntValue(0);
+//	}
+//	void setIntValue(int temp) {
+//		char strValue[8];
+//		itoa(temp, strValue, 10);
+//		setValue(strValue);
+//	}
+//	int getIntValue() {
+//		std::string value = getValue();
+//		char charValue[6];
+//		strcpy(charValue, value.c_str());
+//		return atoi(charValue);
+//	}
+//};
+
+//IntCharacteristic *pCharacteristic;
 
 void setup() {
 	Serial.begin(115200);
@@ -105,7 +112,8 @@ void loop() {
 
 	if (deviceConnected) {
 		Serial.printf("*** NOTIFY: %d ***\n", value);
-		pCharacteristic->setValue(&value, 1);
+		setIntToCharacteristic(pCharacteristic, value);
+		//pCharacteristic->setValue(&value, 1);
 		pCharacteristic->notify();
 		//pCharacteristic->indicate();
 		value++;
