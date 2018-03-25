@@ -45,8 +45,6 @@ class MyServerCallbacks : public BLEServerCallbacks {
 	};
 };
 
-int count = 0;
-
 void setIntToCharacteristic(BLECharacteristic* charact, int value) {
 	char txstr[8];
 	itoa(value, txstr, 10);
@@ -121,24 +119,24 @@ void setup() {
 	Serial.println("Waiting a client connection to notify...");
 	
 }
-
+int count = 1;
 void loop() {
+
+	count = count * (-1);
 	if (deviceConnected)
 	{
-		setIntToCharacteristic(scaleValue1Characteristic, 1201);
-		scaleValue1Characteristic->notify(); 
-		setIntToCharacteristic(scaleValue2Characteristic, 1202);
+		setIntToCharacteristic(scaleValue1Characteristic, (1201 + count));
+		scaleValue1Characteristic->notify();
+
+		setIntToCharacteristic(scaleValue2Characteristic, (1202 + count));
 		scaleValue2Characteristic->notify();
-		setIntToCharacteristic(scaleValue3Characteristic, 1203);
+
+		setIntToCharacteristic(scaleValue3Characteristic, (1203 + count));
 		scaleValue3Characteristic->notify();
-		
-		
-		
+
+
+
 		delay(500);
 	}
-	
-	else
-	{
 
-	}
 }
