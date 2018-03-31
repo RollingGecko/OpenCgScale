@@ -5,21 +5,21 @@ Author:	Andreas Chaitidis
 */
 
 #include "HX711.h"
-#include "config.h"
-#include "SimpleBLE.h"
+
+
+#define SCALEDATAPIN_MAIN		32
+#define SCALECLKPIN_MAIN		33
+#define SCALEGAIN_MAIN		199.21
 
 //Definition of Scale Objects
 
 HX711	ScaleMain(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
 int	ScaleReading_Main = 0.00;
 
-//Definition of Bluetooth object
-SimpleBLE	Bluetooth;
-
 
 void setup() {
 	//Initializing USB
-	Serial.begin(SERIAL_SPEED);
+	Serial.begin(115200);
 	Serial.println("CG-Scale 0.1");
 	Serial.println();
 
@@ -34,12 +34,11 @@ void setup() {
 
 void loop() {
 	ScaleMain.read();
-	ScaleReading_Main = round(ScaleMain.get_units(SCALENUMBEROFAVERAGECYCLES));
+	ScaleReading_Main = round(ScaleMain.get_units(5));
 	if (ScaleReading_Main <= 4)
 	{
 		ScaleReading_Main = 0;
 	}
 	Serial.println(ScaleReading_Main);
-	Bluetooth.begin(String(ScaleReading_Main));
 
 }
