@@ -13,7 +13,7 @@
 
 #define LASER_PIN				27
 #define BUTTON_PIN				21
-#define LED_PIN					24
+#define LED_PIN					14
 #define VOLTAGE_ACCU_PIN		12
 
 #define SCALEGAIN_MAIN			128
@@ -42,3 +42,8 @@
 #define LASER_SERVICE_UUID					"960c2dd9-875f-44b1-8104-d67a5fbf3ce0"
 #define LASER_SWITCH_CHARACTERISTIC_UUID	"a0460204-3062-11e8-b467-0ed5f89f718b"
 #endif
+
+//BUtton Count Settings
+
+#define DEBOUNCEDELAY 200
+#define COUNTINTERVAL 1500

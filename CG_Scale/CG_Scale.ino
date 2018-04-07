@@ -61,9 +61,29 @@ void scaleToBle(HX711* scale, BLECharacteristic* ble) {
 	ble->notify();
 }
 
+
+volatile int buttonInterruptCount = 0;
+unsigned long lastDebounceTime = 0;
+unsigned long startButtonCountInterval = 0;
+int numberOfInterrupts = 0;
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
+boolean laserOn = false;
+
+void IRAM_ATTR handleInterrupt() {
+	portENTER_CRITICAL_ISR(&mux);
+	buttonInterruptCount++;
+	portEXIT_CRITICAL_ISR(&mux);
+}
+
 void setup() {
 	pinMode(LED_PIN, OUTPUT);
 	digitalWrite(LED_PIN, HIGH);
+
+	pinMode(LASER_PIN, OUTPUT);
+
+	pinMode(BUTTON_PIN, INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleInterrupt, FALLING);
 
 	Serial.begin(115200);
 		
@@ -143,29 +163,81 @@ void setup() {
 	Serial.println("Waiting a client connection to notify...");
 
 }
-int count = 1;
+
+
 void loop() {
 
-	count = count * (-1);
+	//Blocking the look during button counting intervall
+	while (buttonInterruptCount>0 || numberOfInterrupts > 0)
+	{
+		if (buttonInterruptCount>0) {
+
+			portENTER_CRITICAL(&mux);
+			buttonInterruptCount--;
+			portEXIT_CRITICAL(&mux);
+			//Debouncing button
+			if ((millis() - lastDebounceTime >= DEBOUNCEDELAY))
+			{
+				lastDebounceTime = millis();
+				numberOfInterrupts++;
+				Serial.print("An interrupt has occurred. Total: ");
+				Serial.println(numberOfInterrupts);
+				//Set start of counting Interval
+				if (numberOfInterrupts == 1)
+				{
+					startButtonCountInterval = millis();
+				}
+			}
+		}
+
+		if (millis() - startButtonCountInterval > COUNTINTERVAL && numberOfInterrupts > 0)
+		{
+			Serial.print("Number of counts in Interval: ");
+			Serial.println(numberOfInterrupts);
+			
+			switch (numberOfInterrupts)
+			{
+			case 1:
+				Serial.println("Laser on");
+				if (!laserOn)
+				{
+					digitalWrite(LASER_PIN, HIGH);
+					laserOn = true;
+					Serial.println("Laser on");
+				}
+
+				else
+				{
+					digitalWrite(LASER_PIN, LOW);
+					laserOn = false;
+					Serial.println("Laser off");
+				}
+				
+
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			default:
+				break;
+			}
+			numberOfInterrupts = 0;
+		}
+	}
+
+	
+	
 	if (deviceConnected)
 	{
-		scaleToBle(&scaleMain, scaleValueMainCharacteristic); //Frage: Warum hier Referenz?
+		//Reading the scale modules
 
-		//setIntToCharacteristic(scaleValueMainCharacteristic, (1201 + count)); //Frage: Warum hier keine Referenz
-		//scaleValueMainCharacteristic->notify();
-
+		scaleToBle(&scaleMain, scaleValueMainCharacteristic); 
 		scaleToBle(&scale1, scaleValue1Characteristic);
-		
-		//setIntToCharacteristic(scaleValue1Characteristic, (1202 + count));
-		//scaleValue1Characteristic->notify();
-
 		scaleToBle(&scale2, scaleValue2Characteristic);
-
-		//setIntToCharacteristic(scaleValue2Characteristic, (1203 + count));
-		//scaleValue2Characteristic->notify();
-
-		//Serial.println(count);
-
+		
+		
+		
 		delay(500);
 	}
 
