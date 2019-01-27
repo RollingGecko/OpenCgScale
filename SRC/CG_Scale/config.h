@@ -4,17 +4,34 @@
 //Pinsettings
 
 #define SERIAL_SPEED			115200
-#define SCALEDATAPIN_MAIN		25
-#define SCALECLKPIN_MAIN		26
-#define SCALEDATAPIN_1			32
-#define SCALECLKPIN_1			33
-#define SCALEDATAPIN_2			18
-#define SCALECLKPIN_2			19
 
-#define LASER_PIN				27
-#define BUTTON_PIN				21
-#define LED_PIN					14
-#define VOLTAGE_ACCU_PIN		12
+//Himalaya ESP32
+
+//#define SCALEDATAPIN_MAIN		25
+//#define SCALECLKPIN_MAIN		26
+//#define SCALEDATAPIN_1			32
+//#define SCALECLKPIN_1			33
+//#define SCALEDATAPIN_2			18
+//#define SCALECLKPIN_2			19
+//
+//#define LASER_PIN				27
+//#define BUTTON_PIN				21
+//#define LED_PIN					14
+//#define VOLTAGE_ACCU_PIN		12
+
+//WEMOS Lolin32
+
+#define SCALEDATAPIN_MAIN		13
+#define SCALECLKPIN_MAIN		15
+#define SCALEDATAPIN_1			2
+#define SCALECLKPIN_1			0
+#define SCALEDATAPIN_2			04
+#define SCALECLKPIN_2			16
+
+#define LASER_PIN				12
+#define BUTTON_PIN				14
+#define LED_PIN					27
+#define VOLTAGE_ACCU_PIN		26
 
 #define SCALEGAIN_MAIN			128
 #define SCALEGAIN_1				128
@@ -43,7 +60,7 @@
 #define LASER_SWITCH_CHARACTERISTIC_UUID	"a0460204-3062-11e8-b467-0ed5f89f718b"
 #endif
 
-//BUtton Count Settings
+//Button Count Settings
 
 #define DEBOUNCEDELAY 200
 #define COUNTINTERVAL 1500
