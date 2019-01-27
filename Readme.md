@@ -17,7 +17,7 @@ All information are shown on a Android app via bluetooth 4.0 low energy.
 
 ![Screenshot](Images/Screenshot.jpg)
 
-All parts are printed 3d. Files are provided as [(STL)](https://github.com/RollingGecko/CgScale/tree/master/Parts/STL). Some aluminium parts are required. But they can simply be cutted from aluminium profile [(PDF)](https://github.com/RollingGecko/CgScale/raw/master/Parts/Alu-Parts_Drawing.PDF).
+All parts are printed 3d. Files are provided as [(STL)](https://github.com/RollingGecko/CgScale/tree/master/Parts/STL). Some aluminium parts are required. But they can simply be cutted from aluminium profile [(PDF)](https://github.com/RollingGecko/CgScale/blob/master/Parts/Alu-Parts_Drawing.PDF).
 
 ![Scale Cut](Images/Scale_cut.JPG)
 
