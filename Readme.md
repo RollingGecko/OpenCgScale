@@ -1,4 +1,4 @@
-# CG-Scale
+# Open CG-Scale
 
 The complete project is open source. 
 
