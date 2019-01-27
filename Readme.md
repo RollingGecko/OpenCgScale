@@ -23,6 +23,9 @@ All parts are printed 3d. Files are provided. Some aluminium parts are required.
 
 ## Hardware
 ### Based on ESP32. 
+
+![Electronic1](Images/electronic1.jpg)
+
 * Used Board ESP32 WeMos LOLIN32 Lite V1.0.0
 	* https://wiki.wemos.cc/products:lolin32:lolin32_lite
 	* https://arduino-projekte.info/wemos-lolin32-lite/ (German)
@@ -47,3 +50,5 @@ All parts are printed 3d. Files are provided. Some aluminium parts are required.
 ![Circuit](Images/circuit.jpg)
 
 The PIN-setting to the esp32 is configured in the config.h file.
+
+![Electronic2](Images/electronic2.jpg)
