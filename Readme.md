@@ -13,7 +13,8 @@ Measuring of distance is supported by a laser, that points to the middle of the 
 ![Overview Jet](Images/Overview_Jet.jpg)
 ![Scale3](Images/Scale3.JPG)
 
-All information are shown on a Android app via bluetooth 4.0 low energy. 
+All information are shown on a Android app via bluetooth 4.0 low energy. The app was designed in [Thunkable](https://thunkable.com/#/). The design file is stored together
+with the aplication AKP in the repo. [(Link)](https://github.com/RollingGecko/CgScale/tree/master/SRC/APP)
 
 ![Screenshot](Images/Screenshot.jpg)
 
