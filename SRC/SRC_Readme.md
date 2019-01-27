@@ -1,4 +1,4 @@
-## To programs available
+## Two programs available
 
 ### CG_Scale
 The main finished program.
