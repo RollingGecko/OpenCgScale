@@ -42,4 +42,6 @@ All parts are printed 3d. Files are provided. Some aluminium parts are required.
 * Used Libraries from espressif. See https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md for installation.
 * HX-711 Board: https://github.com/bogde/HX711.git
 
+# Circuit
 
+![Circuit](Images/circuit.jpg)
