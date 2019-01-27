@@ -45,3 +45,5 @@ All parts are printed 3d. Files are provided. Some aluminium parts are required.
 # Circuit
 
 ![Circuit](Images/circuit.jpg)
+
+The PIN-setting to the esp32 is configured in the config.h file.
