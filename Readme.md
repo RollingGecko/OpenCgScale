@@ -33,7 +33,7 @@ All parts are printed 3d. Files are provided as [(STL)](https://github.com/Rolli
 * The Board provides an Lipo Battery Charger
 ### Scale
 
-* Used 10 kg load cell together with the [HX-711](https://github.com/bogde/HX711.git) board you can find for exmaple
+* Used 10 kg load cell together with the [HX-711](https://github.com/bogde/HX711.git) board you can find for example
   * on ebay: https://tinyurl.com/ybxn4rfh
   * on aliexpress: https://tinyurl.com/y78dd9gv
 
