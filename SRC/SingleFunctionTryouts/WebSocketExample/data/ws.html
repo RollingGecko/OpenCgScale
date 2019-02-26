@@ -1,0 +1,32 @@
+<!-- HtmlView:on -->
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://192.168.4.1/ws");
+
+        ws.onopen = function() {
+            window.alert("Connected");
+         };
+
+        ws.onmessage = function (evt) {
+            var jsonMessage = JSON.parse(evt.data);
+
+            document.getElementById("Scale1").innerHTML = "Scale1: " + jsonMessage.Scale1 + " kg";
+            document.getElementById("Scale2").innerHTML = "Scale2: " + jsonMessage.Scale2 + " kg";
+            document.getElementById("Scale3").innerHTML = "Scale3: " + jsonMessage.Scale3 + " kg";
+
+            //document.getElementById("display").innerHTML  = "temperature: " + evt.data + " C";
+        };
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <p id="Scale1">Not connected</p>
+        <p id="Scale2">Not connected</p>
+        <p id="Scale3">Not connected</p>
+    </div>
+</body>
+</html>
