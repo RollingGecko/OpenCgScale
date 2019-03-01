@@ -16,10 +16,13 @@ BLECharacteristic *scaleValue2Characteristic;
 
 //Declaratition of HX711 Scale Modules
 
-HX711	scaleMain(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
-HX711	scale1(SCALEDATAPIN_1, SCALECLKPIN_1, SCALEGAIN_1);
-HX711	scale2(SCALEDATAPIN_2, SCALECLKPIN_2, SCALEGAIN_2);
+//HX711	scaleMain(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
+//HX711	scale1(SCALEDATAPIN_1, SCALECLKPIN_1, SCALEGAIN_1);
+//HX711	scale2(SCALEDATAPIN_2, SCALECLKPIN_2, SCALEGAIN_2);
 
+HX711	scaleMain;
+HX711	scale1;
+HX711	scale2;
 int	ScaleReading_Main = 0.00;
 
 //BLECharacteristic *configMeasureScale1Characteristic;
@@ -84,6 +87,11 @@ void setup() {
 
 	pinMode(BUTTON_PIN, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleInterrupt, FALLING);
+
+	scaleMain.begin(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
+	scale1.begin(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
+	scale2.begin(SCALEDATAPIN_MAIN, SCALECLKPIN_MAIN, SCALEGAIN_MAIN);
+	
 
 	Serial.begin(115200);
 		
